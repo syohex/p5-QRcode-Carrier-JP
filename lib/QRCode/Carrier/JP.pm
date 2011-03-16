@@ -39,8 +39,7 @@ sub new {
 
     my $attrs = {};
 
-    $attrs->{verbose}    = delete $args->{verbose} || 0;
-    $attrs->{output_dir} = delete $args->{output_dir} || 'qrcode';
+    $attrs->{debug}    = delete $args->{debug} || 0;
     $attrs->{qrcode} = Imager::QRCode->new(
         version       => 1,
         level         => 'M',
@@ -63,14 +62,9 @@ sub run {
 
     my $retval = {};
     while ( my ($name, $info) = each %{$contact_info} ) {
-        if ($self->{verbose}) {
-            printf "Output %s's QR code\n",
-                Encode::encode($ENCODE_CHARSET, $name);
-        }
-
         for my $carrier (@carriers) {
             my $data = $qr_func{$carrier}->($self, $info);
-            if ($self->{verbose} >= 2) {
+            if ($self->{debug}) {
                 my $decoded = Encode::decode('shift_jis', $data);
                 $decoded =~ s{\r\n$}{\n}xmsg;
                 printf "\n%s\n",
@@ -103,7 +97,7 @@ sub _validate_contact_info_each {
 
     my $encoded_name = Encode::encode($ENCODE_CHARSET, "$name");
 
-    if ($self->{verbose}) {
+    if ($self->{debug}) {
         printf "Validate %s's contact information.... ", $encoded_name;
     }
 
@@ -169,7 +163,7 @@ sub _validate_contact_info_each {
         $info->{$key} = defined $info->{$key} ? $info->{$key} : '';
     }
 
-    if ($self->{verbose}) {
+    if ($self->{debug}) {
         printf "OK\n", $encoded_name;
     }
 }
