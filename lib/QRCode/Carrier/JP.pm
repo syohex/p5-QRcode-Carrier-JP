@@ -83,7 +83,7 @@ sub run {
 
             my $imager = $self->{qrcode}->plot($data);
 
-            $retval->{$name} = $imager;
+            $retval->{$name}->{$carrier} = $imager;
         }
     }
 
