@@ -22,7 +22,7 @@ my %qr_func = (
 
 my %valid_pattern = (
     mail_addresses => qr/^[^@]+\@[^@]+$/xms,
-    telephones     => qr/^[0-9#P]+$/xms,
+    telephones     => qr/^[0-9#P\-]+$/xms,
 );
 
 my %limit_length = (
@@ -64,10 +64,10 @@ sub run {
     while ( my ($name, $info) = each %{$contact_info} ) {
         for my $carrier (@carriers) {
             my $data = $qr_func{$carrier}->($self, $info);
-            if ($self->{debug}) {
+            if ($self->{debug} > 2) {
                 my $decoded = Encode::decode('shift_jis', $data);
                 $decoded =~ s{\r\n$}{\n}xmsg;
-                printf "\n%s\n",
+                printf STDERR "\n%s\n",
                     Encode::encode($ENCODE_CHARSET, $decoded);
             }
 
@@ -98,7 +98,7 @@ sub _validate_contact_info_each {
     my $encoded_name = Encode::encode($ENCODE_CHARSET, "$name");
 
     if ($self->{debug}) {
-        printf "Validate %s's contact information.... ", $encoded_name;
+        printf STDERR "Validate %s's contact information.... ", $encoded_name;
     }
 
     ## mandatory parameters
@@ -164,7 +164,7 @@ sub _validate_contact_info_each {
     }
 
     if ($self->{debug}) {
-        printf "OK\n", $encoded_name;
+        printf STDERR "OK\n", $encoded_name;
     }
 }
 
@@ -184,6 +184,7 @@ sub _create_docomo_data {
     push @params, "SOUND:" . Encode::encode('shift_jis', $sound_param);
 
     for my $telephone (@{$info->{telephones}}) {
+        $telephone =~ s{-}{}g;
         push @params, "TEL:" . $telephone;
     }
 
@@ -238,6 +239,7 @@ sub _create_softbank_data {
     {
         my $i = 1;
         for my $telephone (@{$info->{telephones}}) {
+            $telephone =~ s{-}{}g;
             push @params, "TEL${i}:" . $telephone;
             $i++;
         }
