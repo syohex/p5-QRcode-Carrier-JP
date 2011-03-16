@@ -13,8 +13,9 @@ use Encode;
 use MIME::Base64;
 
 my $input_file = shift or die "Usage $0 input_file\n";
+die "$input_file is not found\n" unless -e $input_file;
 
-my $app = QRCode::Carrier::JP->new({verbose => 0});
+my $app = QRCode::Carrier::JP->new({debug => 0});
 
 my $contact_info;
 eval {
