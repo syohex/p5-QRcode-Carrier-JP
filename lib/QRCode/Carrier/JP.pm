@@ -55,6 +55,10 @@ sub new {
 sub run {
     my ($self, $contact_info) = @_;
 
+    unless (ref $contact_info eq "HASH") {
+        Carp::croak("contact_info parameter must be HASH reference\n");
+    }
+
     $self->_validate_contact_info($contact_info);
 
     my $retval = {};
