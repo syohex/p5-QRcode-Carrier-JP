@@ -7,7 +7,7 @@ our $VERSION = '0.01';
 
 use Carp ();
 use Encode ();
-use Encode::JP::H2Z;
+use Encode::JP::H2Z ();
 use File::Spec ();
 use Imager::QRCode;
 
