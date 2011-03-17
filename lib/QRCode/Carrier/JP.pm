@@ -279,7 +279,7 @@ __END__
 
 =head1 NAME
 
-QRCode::Carrier::JP -
+QRCode::Carrier::JP - QRCode Generator
 
 =head1 SYNOPSIS
 
@@ -289,11 +289,90 @@ QRCode::Carrier::JP -
 
 QRCode::Carrier::JP is
 
+=head1 INTERFACE
+
+=head2 Class Methods
+
+=head3 C<< QRCode::Carrier::JP->new(\%args) >>
+
+Create and returns a new QRCode::Carrier::JP instance.
+Arguments should be HASH reference.
+
+I<\%args> might be;
+
+=over
+
+=item debug :Int
+
+Output debug message to STDERR.
+
+=back
+
+=head3 C<< QRCode::Carrier::JP->run(\%contact_info) >>
+
+Argument should be HASH reference.
+
+I<%args> might be the follwing format:
+
+$contact_info = {
+    'your_name' => {
+        # Set information which you like
+        memory => 'memo',
+
+        # Set KANJI name.
+        # Family and first name should be separated with a space.
+        name1  => 'your KANJI name',
+
+        # Set KATAKANA name.
+        # Family and first name should be separated with a space.
+        name2  => 'your KATAKANA name',
+
+        # Set mail addresses as ARRAY reference.
+        # Array length should be less than equal 3.
+        mail_addresses => [
+            'your first mail address',
+            'your second mail address',
+        ],
+
+        # Set mail addresses as ARRAY reference.
+        # Array length should be less than equal 3.
+        telephones => [
+            'your first telephone number',
+            'your first second number',
+        ],
+
+        # Set address where you live.
+        address => 'your_address'
+     },
+
+    'his_name' => {
+        .....
+     },
+     .....
+};
+
+Return valus is following format:
+
+$retval = {
+    'your_name' => {
+        au       => 'Imager object ploted QRCode',
+        docomo   => 'Imager object ploted QRCode',
+        softbank => 'Imager object ploted QRCode',
+    },
+    'hisname_name' => {
+        ....
+    },
+    ....
+
+};
+
 =head1 AUTHOR
 
 Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
 
 =head1 SEE ALSO
+
+C<Imager::QRCode>
 
 =head1 LICENSE
 
