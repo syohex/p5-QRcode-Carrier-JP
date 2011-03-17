@@ -10,7 +10,6 @@ use Text::Xslate;
 
 use utf8;
 use Encode;
-use MIME::Base64;
 
 my $input_file = shift or die "Usage $0 input_file\n";
 die "$input_file is not found\n" unless -e $input_file;
@@ -25,72 +24,27 @@ if ($@) {
     die "Error: read input file: $@\n";
 }
 
-my $qrcode_info = $app->run($contact_info);
-
-my $png_base64 = {};
-my $info_string = {};
-for my $name (keys %{$qrcode_info}) {
-    my $qrcode_imager = $qrcode_info->{$name};
-
-    $info_string->{$name} = contact_info_as_string($contact_info->{$name});
-    for my $carrier (sort keys %{$qrcode_imager}) {
-        my $png_data;
-        $qrcode_imager->{$carrier}->write(
-            data => \$png_data,
-            type => 'png',
-        );
-
-        $png_base64->{$name}->{$carrier} = encode_base64($png_data);
-    }
-}
-
-my $tx = Text::Xslate->new(
-    syntax => 'Kolon',
-);
+my @contact_infos = $app->run($contact_info);
 
 my $tmpl_str = do {
     local $/;
-    my $str = <DATA>;
-    decode_utf8($str);
+    decode_utf8(scalar <DATA>);
 };
 
-my $output_str = $tx->render_string(
-    $tmpl_str,
-    {
-        png_base64 => $png_base64,
-        info_string => $info_string,
+my $tx = Text::Xslate->new(
+    function => {
+        newline_to_br_tag => sub {
+            my $str = shift;
+            $str =~ s{\n}{<br />}gxms;
+            $str;
+        },
     },
 );
-
+my $output_str = $tx->render_string($tmpl_str, {
+    contact_infos => \@contact_infos,
+    carriers      => [ qw/au docomo softbank/ ],
+});
 print encode_utf8($output_str);
-
-sub contact_info_as_string {
-    my $contact_info = shift;
-
-    my @attrs;
-
-    push @attrs, "名前:";
-    push @attrs, "<strong>" . $contact_info->{name1} .
-        "(" . $contact_info->{name2} . ")</strong>";
-
-    push @attrs, "メールアドレス:";
-    push @attrs, $_ for @{$contact_info->{mail_addresses}};
-
-    push @attrs, "電話番号:";
-    push @attrs, $_ for @{$contact_info->{telephones}};
-
-    if ($contact_info->{address}) {
-        push @attrs, "住所:";
-        push @attrs, $contact_info->{address};
-    }
-
-    if ($contact_info->{memory}) {
-        push @attrs, "メモ:";
-        push @attrs, $contact_info->{memory};
-    }
-
-    return join "<br />", @attrs;
-}
 
 __DATA__
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -101,29 +55,14 @@ __DATA__
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <title>キャリア別 QRコード</title>
 <style type="text/css">
-div.main {
-  width: 900px;
-  margin: 0 auto 0 auto;
-  text-align:center;
-}
-table, td, th {
-  border: 2px #808080 solid;
-}
-table {
-  margin: 0 auto 0 auto;
-}
-th {
-  font-family: sans-serif;
-  font-size: 14px;
-}
-td.contact_info {
-  font-family: sans-serif;
-  font-size: 12px;
-  text-align: left;
-}
+div.main { width: 1000px; margin: 0 auto 0 auto; text-align:center;}
+table, td, th { border: 2px #808080 solid;}
+table { margin: 0 auto 0 auto;}
+th { font-family: sans-serif; font-size: 14px;}
+td.contact_info { font-family:sans-serif; font-size:12px;
+font-weight:700; text-align: left;}
 </style>
 </head>
-
 <body>
 <div class="main">
 <h1>キャリア別 QRコード</h1>
@@ -134,19 +73,19 @@ td.contact_info {
   <th>docomo</th>
   <th>softbank</th>
 </tr>
-
-: for $png_base64.keys() -> $name {
+: for $contact_infos -> $contact_info {
   <tr>
-  <td class="contact_info"><: $info_string[$name] | mark_raw :></td>
-:  for $png_base64[$name].keys().sort() -> $carrier {
+  <td class="contact_info">
+      <: newline_to_br_tag($contact_info.as_string()) | mark_raw :>
+  </td>
+:  for $carriers.sort() -> $carrier {
       <td>
-         <img src="data:image/png;base64,<: $png_base64[$name][$carrier] :>"
+         <img src="data:image/png;base64,<: $contact_info.qrcode_as_base64($carrier) :>"
               alt="<: $carrier :>_QRcode" />
       </td>
 :  }
   </tr>
 : }
-
 </table>
 </div>
 </body>
