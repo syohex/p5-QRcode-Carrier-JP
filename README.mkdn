@@ -33,32 +33,32 @@ _%args_ might be the follwing format:
 
 $contact_info = {
     'your_name' => {
-        # Set information which you like
+        # Set information which you like (<= 80byte as Shift_jis)
         memory => 'memo',
 
-        # Set KANJI name.
+        # Set KANJI name.(<= 24byte as Shift_jis)
         # Family and first name should be separated with a space.
         name1  => 'your KANJI name',
 
-        # Set KATAKANA name.
+        # Set KATAKANA name.(<= 24byte as Shift_jis)
         # Family and first name should be separated with a space.
         name2  => 'your KATAKANA name',
 
-        # Set mail addresses as ARRAY reference.
+        # Set mail addresses as ARRAY reference. (<= 60byte as Ascii)
         # Array length should be less than equal 3.
         mail_addresses => [
             'your first mail address',
             'your second mail address',
         ],
 
-        # Set mail addresses as ARRAY reference.
+        # Set mail addresses as ARRAY reference. (<= 60byte as Ascii)
         # Array length should be less than equal 3.
         telephones => [
             'your first telephone number',
             'your first second number',
         ],
 
-        # Set address where you live.
+        # Set address where you live. (<= 80byte as Shift_jis)
         address => 'your_address'
      },
 
