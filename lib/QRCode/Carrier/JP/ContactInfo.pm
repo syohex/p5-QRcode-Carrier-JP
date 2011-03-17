@@ -76,7 +76,7 @@ sub validate {
 
     my $name1 = $self->name1;
     unless ($name1 =~ m{\w+ \s \w+}xms) {
-        Carp::croak("name1 parameter."
+        Carp::croak("name1 parameter $name1 is invalid.\n"
            , "You must separate family name and first name with a space\n");
     }
 
@@ -85,9 +85,8 @@ sub validate {
     _check_byte_length($shift_jis_name1, $limit_length{name1} + 1);
 
     my $name2 = $self->name2;
-
     unless ($name2 =~ m{(\w+) \s (\w+)}xms) {
-        Carp::croak("name2 parameter."
+        Carp::croak("name2 parameter $name2 is invalid.\n"
            , "You must separate family name and first name with a space\n");
     }
 
