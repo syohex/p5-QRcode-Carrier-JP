@@ -1,0 +1,39 @@
+# Do not edit these pragmas
+use strict;
+use warnings;
+use utf8;
+
+my $contact_info = {
+    '山田太郎' => {
+        memory => '',
+        name1  => '山田 太郎',
+        name2  => 'ヤマダ タロウ',
+        mail_addresses => [
+            'yamada_taro@pc.example.com',
+            'yamada_taro@mobile.example.com',
+        ],
+        telephones => [
+            '090-1234-5678',
+            '012-345-6789',
+        ],
+        address => '〇〇県〇〇市1-1',
+    },
+
+    '架空花子' => {
+        memory => '',
+        name1  => '架空 花子',
+        name2  => 'カクウ ハナコ',
+        mail_addresses => [
+            'kakuu_hanako@pc.example.com',
+            'kakuu_hanako@mobile.example.com',
+        ],
+        telephones => [
+            '090-9876-4321',
+            '987-6543-3210',
+        ],
+        address => '〇〇県〇〇村1-1',
+    },
+};
+
+## Do not edit this line
+$contact_info;
