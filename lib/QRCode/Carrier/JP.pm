@@ -29,9 +29,9 @@ my %limit_length = (
     memory         => 80,
     name1          => 24,
     name2          => 24,
-    mail           => 60,
+    mail_addresses => 60,
     telephones     => 24,
-    mail_addresses => 80,
+    address        => 80,
 );
 
 sub new {
@@ -160,7 +160,11 @@ sub _validate_contact_info_each {
 
     ## optional parameters
     for my $key (qw/memory address/) {
-        $info->{$key} = defined $info->{$key} ? $info->{$key} : '';
+        if (defined $info->{$key}) {
+            _check_byte_length($info->{$key}, $limit_length{$key});
+        } else {
+            $info->{$key} = '';
+        }
     }
 
     if ($self->{debug}) {
