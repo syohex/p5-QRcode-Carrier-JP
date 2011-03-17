@@ -1,4 +1,9 @@
 use strict;
-use Test::More tests => 1;
+use Test::More;
 
-BEGIN { use_ok 'QRCode::Carrier::JP' }
+BEGIN {
+    use_ok 'QRCode::Carrier::JP';
+    use_ok 'QRCode::Carrier::JP::ContactInfo';
+}
+
+done_testing;
