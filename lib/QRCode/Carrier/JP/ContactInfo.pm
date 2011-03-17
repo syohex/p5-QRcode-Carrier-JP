@@ -155,6 +155,10 @@ sub output_qrcode {
 
     _check_carrier($carrier);
 
+    unless (defined $output) {
+        Carp::croak("Output file is not specified\n");
+    }
+
     my $qrcode = Imager::QRCode->new(
         version       => 1,
         level         => 'M',
