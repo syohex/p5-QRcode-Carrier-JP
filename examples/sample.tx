@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<title>キャリア別 QRコード</title>
+
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+  $("td").toggle(
+     function () {
+         $(this).css("background-color", "#ffff00");
+     },
+     function () {
+         $(this).css("background-color", "#ffffff");
+     }
+  );
+});
+
+</script>
+
+<style type="text/css">
+div.main {
+   width: 1000px;
+   margin: 0 auto 0 auto;
+   text-align:center;
+}
+table, td, th {
+   border: 2px #808080 solid;
+}
+table {
+   margin: 0 auto 0 auto;
+}
+th {
+   font-family: sans-serif; font-size: 14px;
+}
+td.contact_info {
+   font-family:sans-serif;
+   font-size:12px;
+   text-align: left;
+}
+</style>
+</head>
+<body>
+<div class="main">
+<h1>キャリア別 QRコード</h1>
+<table>
+<tr>
+  <th>連絡情報</th>
+  <th>au</th>
+  <th>docomo</th>
+  <th>softbank</th>
+</tr>
+: for $contact_infos -> $contact_info {
+  <tr>
+  <td class="contact_info">
+      <strong>名前:</strong><br />
+      <: $contact_info.name1() :>(<: $contact_info.name2 :>)
+      <br /> <br />
+      <strong>メールアドレス:</strong><br />
+      : for $contact_info.mail_addresses -> $mail_address {
+          <: $mail_address :> <br />
+      : }
+      <br />
+      <strong>電話番号:</strong><br />
+      : for $contact_info.telephones -> $telephone {
+          <: $telephone :> <br />
+      : }
+      <br />
+
+      <strong>住所:</strong><br />
+      <: $contact_info.address() :>
+      <br /> <br />
+
+      <strong>メモ:</strong><br />
+      <: $contact_info.memory() :>
+
+  </td>
+   : for ['au', 'docomo', 'softbank'] -> $carrier {
+        <td>
+           <img src="data:image/png;base64,<: $contact_info.qrcode_as_base64($carrier) :>"
+                alt="<: $carrier :>_QRcode" />
+        </td>
+   : }
+  </tr>
+: }
+</table>
+</div>
+</body>
+</html>
+
+<!--
+Local Variables:
+coding: utf-8
+End:
+-->
