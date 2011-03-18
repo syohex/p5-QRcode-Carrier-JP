@@ -93,7 +93,8 @@ sub validate {
     my ($family, $first) = ($1, $2);
 
     # '+ 1' means a space which separates family name and first name
-    my $shift_jis_name2 = Encode::encode('shift_jis', $name2);
+    my $hankaku_name2 = Lingua::JA::Regular::Unicode::katakana_z2h($name2);
+    my $shift_jis_name2 = Encode::encode('shift_jis', $hankaku_name2);
     _check_byte_length($shift_jis_name2, $limit_length{name2} + 1);
 
     my $katakana = Encode::decode_utf8('ァ-ン');
