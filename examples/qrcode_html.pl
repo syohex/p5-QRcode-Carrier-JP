@@ -25,12 +25,13 @@ if ($@) {
 }
 
 my @contact_infos = $app->run($contact_info);
+my @sorted = reverse sort { $a->birth <=> $b->birth } @contact_infos;
 
 my $tx = Text::Xslate->new(
     syntax => 'Kolon',
 );
 
 my $output_str = $tx->render('sample.tx', {
-    contact_infos => \@contact_infos,
+    contact_infos => \@sorted,
 });
 print encode_utf8($output_str);
