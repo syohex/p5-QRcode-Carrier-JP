@@ -29,9 +29,12 @@ can_ok($contact_info, 'validate');
     throws_ok { $invalid->validate }
         qr/separate family name and first name with a space/, 'no space';
 
-    $invalid->name1('山田 太郎AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+    $invalid->name1('山田 太郎' . 'あ' x 8);
+    lives_ok { $invalid->validate } 'valid name1 length(<= 24byte)';
+
+    $invalid->name1('山田 太郎' . 'あ' x 9);
     throws_ok { $invalid->validate }
-        qr/is too long/, 'too long name';
+        qr/is too long/, 'too long name1(> 24byte)';
 }
 
 {
@@ -44,9 +47,12 @@ can_ok($contact_info, 'validate');
     throws_ok { $invalid->validate }
         qr/must consist of KATAKANA/, 'not KATAKANA';
 
-    $invalid->name1('ヤマダ タロウウウウウウウウウウウウウウウウ');
+    $invalid->name2('ヤマタ タロウ' . 'ウ' x 18);
+    lives_ok { $invalid->validate } 'valid name2 length(<= 24byte)';
+
+    $invalid->name2('ヤマタ タロウ' . 'ウ' x 19);
     throws_ok { $invalid->validate }
-        qr/is too long/, 'too long name';
+        qr/is too long/, 'too long name(> 24byte)';
 }
 
 {
@@ -64,10 +70,15 @@ can_ok($contact_info, 'validate');
         qr/mail_addresses invalid/, 'not much mail format';
 
     $invalid->mail_addresses([
-        'a@' . 'a' x 60,
+        'a@' . 'a' x 58,
+    ]);
+    lives_ok { $invalid->validate } 'valid mail address length(<= 60byte)';
+
+    $invalid->mail_addresses([
+        'a@' . 'a' x 59,
     ]);
     throws_ok { $invalid->validate }
-        qr/is too long/, 'too long mail address';
+        qr/is too long/, 'too long mail address(> 60byte)';
 }
 
 {
@@ -86,25 +97,35 @@ can_ok($contact_info, 'validate');
         qr/telephones invalid/, 'not much telephone format';
 
     $invalid->telephones([
-        '0' . '1' x 24,
+        '0' x 24,
+    ]);
+    lives_ok { $invalid->validate } 'valid telephone length(<= 24byte)';
+
+    $invalid->telephones([
+        '0' x 25,
     ]);
     throws_ok { $invalid->validate }
-        qr/is too long/, 'too long telephone number';
+        qr/is too long/, 'too long telephone number(> 24byte)';
 }
 
 {
     my $invalid = dclone($contact_info);
+    $invalid->address( 'a' x 80 );
+    lives_ok { $invalid->validate } 'valid memory length(<= 80byte)';
+
     $invalid->memory( "a" x 81 );
     throws_ok { $invalid->validate }
-        qr/is too long/, 'too long memory';
+        qr/is too long/, 'memory length too long(> 80byte)';
 }
 
 {
     my $invalid = dclone($contact_info);
-    $invalid->address( "a" x 81 );
-    throws_ok { $invalid->validate }
-        qr/is too long/, 'too long address';
-}
+    $invalid->address( 'a' x 80 );
+    lives_ok { $invalid->validate } 'valid address length(<= 80byte)';
 
+    $invalid->address( 'a' x 81 );
+    throws_ok { $invalid->validate }
+        qr/is too long/, 'too long address(> 80byte)';
+}
 
 done_testing;
