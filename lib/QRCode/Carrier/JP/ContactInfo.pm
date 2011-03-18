@@ -210,14 +210,14 @@ sub _create_docomo_data {
 
     my ($family_name, $first_name) = split /\s/, $self->name1;
     my $name_param = join ',',  $family_name, $first_name;
-    push @params, "MECARD:N:" . Encode::encode('shift_jis', $name_param);
+    push @params, "MECARD:N:" . $name_param;
 
     my ($family_kana, $first_kana) = map {
         Lingua::JA::Regular::Unicode::katakana_z2h($_);
     } split /\s/, $self->name2;
 
     my $sound_param = join ",", $family_kana, $first_kana;
-    push @params, "SOUND:" . Encode::encode('shift_jis', $sound_param);
+    push @params, "SOUND:" . $sound_param;
 
     for my $telephone (@{$self->telephones}) {
         $telephone =~ s{-}{}g;
@@ -229,39 +229,45 @@ sub _create_docomo_data {
     }
 
     my $note = $self->memory;
-    push @params, "NOTE:", Encode::encode('shift_jis', $note);
+    push @params, "NOTE:" . $note;
 
     my $data = join ';', @params;
     $data .= ';;';
 
-    $data;
+    Encode::encode('shift_jis', $data);
 }
 
 sub _create_au_data {
     my $self = shift;
 
-    # Specification of au is based on softbank one.
-    my $data = $self->_create_softbank_data();
+    my $data = $self->_common_au_and_softbank();
 
     # ADD(address)
-    $data .= "ADD:" . Encode::encode('shift_jis', $self->address);
+    $data .= "ADD:" . $self->address;
     $data .= "\015\012";
 
-    $data;
+    Encode::encode('shift_jis', $data);
 }
 
 sub _create_softbank_data {
     my $self = shift;
+
+    my $data = $self->_common_au_and_softbank();
+    Encode::encode('shift_jis', $data);
+}
+
+sub _common_au_and_softbank {
+    my $self = shift;
     my @params;
 
-    push @params, "MEMORY:" . Encode::encode('shift_jis', $self->memory);
+    push @params, "MEMORY:" . $self->memory;
 
     (my $name1 = $self->name1) =~ s{\s}{}xms;
-    push @params, "NAME1:" . Encode::encode('shift_jis', $name1);
+    push @params, "NAME1:" . $name1;
 
     (my $name2 = $self->name2) =~ s{\s}{}xms;
     my $hankaku_name2 = Lingua::JA::Regular::Unicode::katakana_z2h($name2);
-    push @params, "NAME2:" . Encode::encode('shift_jis', $hankaku_name2);
+    push @params, "NAME2:" . $hankaku_name2;
 
     {
         my $i = 1;
