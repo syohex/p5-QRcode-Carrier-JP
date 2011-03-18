@@ -14,7 +14,7 @@ use URI::Escape ();
 
 use Class::Accessor::Lite (
     rw => [
-        qw/id memory name1 name2
+        qw/id birth memory name1 name2
            mail_addresses telephones address qrcode /
        ],
 );
@@ -41,6 +41,7 @@ sub new {
     my $obj = bless {}, $class;
 
     $obj->id($args->{id});
+    $obj->birth(exists $args->{birth} ? $args->{birth} : 0);
 
     unless (defined $args->{name1}) {
         Carp::croak("Not specified 'name1' parameter\n");
