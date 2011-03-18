@@ -112,7 +112,11 @@ $contact_info = {
         ],
 
         # Set address where you live. (<= 80byte as Shift_jis)
-        address => 'your_address'
+        address => 'your_address',
+
+        # year of birthday(default is 0)
+        # This parameter is free attribute, I use it for sorting.
+        birth => 'your birth year',
      },
 
     'his_name' => {
@@ -121,20 +125,7 @@ $contact_info = {
      .....
 };
 
-Return valus is following format:
-
-$retval = {
-    'your_name' => {
-        au       => 'Imager object ploted QRCode',
-        docomo   => 'Imager object ploted QRCode',
-        softbank => 'Imager object ploted QRCode',
-    },
-    'hisname_name' => {
-        ....
-    },
-    ....
-
-};
+Return valus is array of QRCode::Carrier::JP::ContactInfo instances.
 
 =head1 AUTHOR
 
@@ -142,7 +133,7 @@ Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
 
 =head1 SEE ALSO
 
-C<Imager::QRCode>
+C<QRCode::Carrier::JP::ContactInfo>, C<Imager::QRCode>
 
 =head1 LICENSE
 
