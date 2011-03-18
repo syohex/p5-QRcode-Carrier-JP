@@ -10,7 +10,6 @@ ok($app, "QRCode::Carrier::JP->new don't return undef");
 isa_ok($app, "QRCode::Carrier::JP");
 
 my $contact_info = QRCode::Carrier::JP::ContactInfo->new({
-    id => 'id1',
     memory => 'Twitter:yamada',
     name1  => '山田 太郎',
     name2  => 'ヤマダ タロウ',
@@ -24,7 +23,8 @@ my $contact_info = QRCode::Carrier::JP::ContactInfo->new({
 });
 ok($contact_info, "QRCode::Carrier::JP::ContactInfo->new don't return undef");
 isa_ok($contact_info, "QRCode::Carrier::JP::ContactInfo");
-is($contact_info->id, 'id1', "set id");
+
+is($contact_info->birth, 0, "default birth");
 is($contact_info->name1, '山田 太郎', "set KANJI name(name1)");
 is($contact_info->name2, 'ヤマダ タロウ', "set KATAKANA name(name2)");
 is($contact_info->mail_addresses->[0], 'yamada_taro@pc.example.com', "set mail address");

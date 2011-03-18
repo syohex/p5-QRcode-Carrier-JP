@@ -27,8 +27,6 @@ sub run {
 
     my @contact_infos;
     while (my ($id, $info) = each %{$args}) {
-        $info->{id} = $id;
-
         my $contact_info = QRCode::Carrier::JP::ContactInfo->new($info);
 
         if (DEBUG) {

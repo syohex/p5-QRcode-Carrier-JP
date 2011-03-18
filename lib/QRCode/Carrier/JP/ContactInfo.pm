@@ -14,7 +14,7 @@ use URI::Escape ();
 
 use Class::Accessor::Lite (
     rw => [
-        qw/id birth memory name1 name2
+        qw/birth memory name1 name2
            mail_addresses telephones address qrcode /
        ],
 );
@@ -40,7 +40,6 @@ sub new {
 
     my $obj = bless {}, $class;
 
-    $obj->id($args->{id});
     $obj->birth(exists $args->{birth} ? $args->{birth} : 0);
 
     unless (defined $args->{name1}) {
@@ -57,7 +56,7 @@ sub new {
 
     for my $param (qw/mail_addresses telephones/) {
         unless (ref $args->{$param} eq 'ARRAY' && scalar @{$args->{$param}} > 0) {
-            Carp::croak($obj->id, ":$param paramter must be ARRAY reference"
+            Carp::croak("$param paramter must be ARRAY reference"
                             , " and its length must be grater than 0\n");
         }
 
