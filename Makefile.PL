@@ -12,6 +12,7 @@ requires 'Lingua::JA::Regular::Unicode';
 requires 'MIME::Base64';
 
 test_requires 'Test::More' => 0.88;
+test_requires 'Test::Exception';
 
 auto_set_repository();
 WriteAll;
