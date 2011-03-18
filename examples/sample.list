@@ -5,7 +5,7 @@ use utf8;
 
 my $contact_info = {
     '山田太郎' => {
-        memory => '',
+        memory => 'Twitter:dummy',
         name1  => '山田 太郎',
         name2  => 'ヤマダ タロウ',
         mail_addresses => [
@@ -20,7 +20,7 @@ my $contact_info = {
     },
 
     '架空花子' => {
-        memory => '',
+        memory => 'Twitter:kakuu',
         name1  => '架空 花子',
         name2  => 'カクウ ハナコ',
         mail_addresses => [
