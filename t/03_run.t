@@ -102,4 +102,6 @@ throws_ok { $contact_info->qrcode_as_base64() }
 throws_ok { $contact_info->qrcode_as_base64('att') }
     qr/Error invalid carrier/, "invalid carrier";
 
+can_ok($contact_info, "as_string");
+
 done_testing;
