@@ -350,6 +350,77 @@ QRCode::Carrier::JP::ContactInfo is
 
 =head1 INTERFACE
 
+=head2 Class Methods
+
+=head3 C<< QRCode::Carrier::JP::ContactInfo->new(\%args) >>
+
+Creates and returns a new contact infomation with I<\%args>.
+Dies on errors.
+
+I<\%args> might be
+
+=over
+
+=item name1 : Str(E<lt>= 80byte when encoded Shift_jis)
+
+I<name1> is full name in KANJI. This is mandatory parameter.
+There is a space between family name and first name.
+
+=item name2 : Str(E<lt>= 80byte when encoded Shift_jis)
+
+I<name2> is full name of KATAKANA. This is mandatory parameter.
+There is a space between family name and first name.
+
+=item mail_addresses : ARRAYREF[Str]
+
+I<mail_addresses> is list of mail addresses.
+List length must be small than equel 3.
+Length of eash mail address must be small than equal 60 byte.
+
+=item telephones : ARRAYREF[Str]
+
+I<telephones> is list of telephone numbers.
+List length must be small than equel 3.
+Length of eash telephone number must be small than equal 24 byte.
+
+=item memory : Str(E<lt>= 80byte when encoded Shift_jis)
+
+I<memory> is some information.
+For example Twitter id, Skype account etc.
+
+=item address : Str(E<lt>= 80byte when encoded Shift_jis)
+
+I<address> is address where lived.
+This parameter is only used au QRCode.
+
+=item birth : Int
+
+I<birth> is a birth year.
+This parameter is free. I used it for sorting some contact informations.
+
+=back
+
+=head2 Instance Methods
+
+=head3 C<< $contact_info->validate() >>
+
+Validate contact infomation.
+
+=head3 C<< $contact_info->create_qr_code() >>
+
+Set QRCode data for DoCoMo, au, Softbank to I<qrcode> attribute.
+You should not use QRCode data directory.
+
+=head3 C<< $contact_info->qrcode_as_base64($carrier) >>
+
+Return QRcode encoded Base64 of $carrier.
+If you specified invalid carrier, throws exception.
+
+=head3 C<< $contact_info->output_qrcode($carrier, $output) >>
+
+QRcode data of $carrier output in $output as a image. $output is a file name.
+Image is outputed by Imager::QRCode.
+
 =head1 AUTHOR
 
 Syohei YOSHIDA E<lt>syohex@gmail.comE<gt>
